@@ -4,12 +4,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PYTHON_VERSION: 3.12
+        PYTHON_VERSION: "3.12"
     volumes: &volumes
       - ./data:/data
+    # run as the host user, so that results in ./data are owned by them (cf. README)
+    user: &user "${HOST_UID:-1000}:${HOST_GID:-1000}"
     hostname: dt
     environment:
-      DATA_OWNER: &owner 1000:1000
       MODEL_DecisionTree: |
           sklearn.tree.DecisionTreeClassifier: 
               max_depth: [null, 10, 20]
@@ -18,9 +19,9 @@ services:
   experiment-mlp:
     build: *experiment_build
     volumes: *volumes
+    user: *user
     hostname: mlp
     environment:
-      DATA_OWNER: *owner
       MODEL_MLP: |
           sklearn.neural_network.MLPClassifier: 
               hidden_layer_sizes: 
@@ -33,9 +34,9 @@ services:
   experiment-lr:
     build: *experiment_build
     volumes: *volumes
+    user: *user
     hostname: lr
     environment:
-      DATA_OWNER: *owner
       MODEL_LogisticRegression: |
           sklearn.linear_model.LogisticRegression: 
               C: [0.1, 1, 10]
@@ -44,9 +45,9 @@ services:
   experiment-svm:
     build: *experiment_build
     volumes: *volumes
+    user: *user
     hostname: svm
     environment:
-      DATA_OWNER: *owner
       MODEL_SVM: |
           sklearn.svm.SVC: 
               C: [0.1, 1, 10]

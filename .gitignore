@@ -5,5 +5,6 @@
 *.csv
 *.png
 *.log
-data/
+data/*
+!data/.gitkeep
 .vscode/

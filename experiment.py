@@ -98,7 +98,7 @@ for clf_name, (clf, params) in classifiers.items():
 
 # Compare validation performance with a boxplot
 plt.figure(figsize=PICTURE_SIZE)
-plt.boxplot(results.values(), labels=results.keys())
+plt.boxplot(list(results.values()), tick_labels=list(results.keys()))
 plt.title('Validation Set Performance of Models')
 plt.ylabel('Accuracy')
 plt.xlabel('Model')

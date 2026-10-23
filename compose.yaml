@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PYTHON_VERSION: "3.12"
+        PYTHON_VERSION: "3.14"
     volumes: &volumes
       - ./data:/data
     # run as the host user, so that results in ./data are owned by them (cf. README)

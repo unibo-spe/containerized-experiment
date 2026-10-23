@@ -9,6 +9,12 @@ services:
       - ./data:/data
     # run as the host user, so that results in ./data are owned by them (cf. README)
     user: &user "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    # cap the resources of each experiment, so that parallel ones do not starve each other
+    deploy: &deploy
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2G
     hostname: dt
     environment:
       MODEL_DecisionTree: |
@@ -20,6 +26,7 @@ services:
     build: *experiment_build
     volumes: *volumes
     user: *user
+    deploy: *deploy
     hostname: mlp
     environment:
       MODEL_MLP: |
@@ -35,17 +42,19 @@ services:
     build: *experiment_build
     volumes: *volumes
     user: *user
+    deploy: *deploy
     hostname: lr
     environment:
       MODEL_LogisticRegression: |
           sklearn.linear_model.LogisticRegression: 
               C: [0.1, 1, 10]
-              solver: ['liblinear', 'lbfgs']
+              solver: ['lbfgs', 'newton-cg']
 
   experiment-svm:
     build: *experiment_build
     volumes: *volumes
     user: *user
+    deploy: *deploy
     hostname: svm
     environment:
       MODEL_SVM: |
